@@ -1,0 +1,12 @@
+{
+  "jobs": [
+    {
+      "id": 101,
+      "title": "AI Engineer",
+      "updated_at": "2026-11-21T18:30:00+05:30",
+      "absolute_url": "https://jobs.fixture.example/ai-engineer",
+      "location": {"name": "Remote"},
+      "content": "Build and evaluate production AI systems."
+    }
+  ]
+}

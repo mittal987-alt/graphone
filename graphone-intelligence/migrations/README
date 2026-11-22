@@ -1,0 +1,7 @@
+GraphOne database migrations are managed with Alembic.
+
+Apply migrations:
+alembic upgrade head
+
+Create a migration:
+alembic revision --autogenerate -m "describe change"
