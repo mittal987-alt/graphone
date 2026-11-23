@@ -118,6 +118,18 @@ cd C:\projects\ai\graphone-intelligence
 .venv\Scripts\python.exe scripts\seed_entities.py
 ```
 
+## Pipeline and export scripts
+
+Dedicated CLI scripts are available in `scripts/`:
+
+- `scripts\run_all.py`: Orchestrates Phase 1 and Phase 2 ingestion in a single pass.
+- `scripts\run_phase1.py`: Ingests startups, products, and arXiv research papers.
+- `scripts\run_phase2.py`: Ingests verified 24-hour news articles and ATS job postings.
+- `scripts\enrich_github_stars.py`: Enriches research papers with live GitHub star counts.
+- `scripts\export_csv.py`: Exports all 6 canonical tabs to CSV in `data/exports/` for immediate import.
+- `scripts\export_sheets.py`: Syncs all 6 tabs directly to Google Sheets using service account credentials.
+- `scripts\generate_architecture_pdf.py`: Recompiles the 3-page `architecture.pdf` design specification.
+
 ## Testing
 
 The test suite uses mocked providers and a controlled fixture dataset; basic tests do not call live third-party APIs.

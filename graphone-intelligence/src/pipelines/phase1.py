@@ -24,11 +24,15 @@ from src.utils.http import AsyncHttpClient
 logger = logging.getLogger(__name__)
 
 
-async def ingest_startups(session: AsyncSession, max_pages: int = 100) -> int:
+async def ingest_startups(
+    session: AsyncSession, max_pages: int = 100, target_count: int = 1050
+) -> int:
     count = 0
     crawler = HuggingFaceOrganizationsCrawler(max_pages=max_pages)
     resolver = EntityResolver()
     async for record in crawler.crawl():
+        if count >= target_count:
+            break
         name = record.get("entityName")
         source_url = record.get("sourceUrl")
         if not name or not source_url:
@@ -67,10 +71,14 @@ async def ingest_startups(session: AsyncSession, max_pages: int = 100) -> int:
     return count
 
 
-async def ingest_products(session: AsyncSession, max_pages: int = 100) -> int:
+async def ingest_products(
+    session: AsyncSession, max_pages: int = 100, target_count: int = 1050
+) -> int:
     count = 0
     crawler = HuggingFaceSpacesCrawler(max_pages=max_pages)
     async for record in crawler.crawl():
+        if count >= target_count:
+            break
         name = record.get("name")
         source_url = record.get("sourceUrl")
         if not name or not source_url:

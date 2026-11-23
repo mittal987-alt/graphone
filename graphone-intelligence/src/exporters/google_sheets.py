@@ -172,7 +172,15 @@ class GoogleSheetsExporter:
                 break
             except Exception as error:
                 status = getattr(error, "status_code", None)
-                if status not in (429, 500, 502, 503, 504):
+                error_name = type(error).__name__
+                is_transient = (
+                    status in (429, 500, 502, 503, 504)
+                    or "TransportError" in error_name
+                    or "ServerNotFoundError" in error_name
+                    or "socket" in error_name.lower()
+                    or "timeout" in error_name.lower()
+                )
+                if not is_transient:
                     checkpoint.status = "failed"
                     checkpoint.raw_metadata = {
                         **checkpoint.raw_metadata,
@@ -329,8 +337,11 @@ class GoogleSheetsService:
     ):
         self.spreadsheet_id = spreadsheet_id
         self.credentials_file = credentials_file
+        self._service = None
 
     def _build_service(self):
+        if self._service is not None:
+            return self._service
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
 
@@ -340,7 +351,8 @@ class GoogleSheetsService:
             self.credentials_file,
             scopes=["https://www.googleapis.com/auth/spreadsheets"],
         )
-        return build("sheets", "v4", credentials=credentials)
+        self._service = build("sheets", "v4", credentials=credentials)
+        return self._service
 
     def ensure_tabs(self, tab_names: list[str]) -> None:
         service = self._build_service()
